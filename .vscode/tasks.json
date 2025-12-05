@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile Project",
+            "type": "process",
+            "isBuildCommand": true,
+            "command": "cargo",
+            "args": ["build"],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": "$rustc"
+        },
+        {
+            "label": "Run Project",
+            "type": "process",
+            "command": "cargo",
+            "args": ["run"],
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Flash",
+            "type": "process",
+            "command": "probe-rs",
+            "args": [
+                "run",
+                "--chip",
+                "RP2350",
+                "target/thumbv8m.main-none-eabihf/debug/rp2350-button"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
