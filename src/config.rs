@@ -50,24 +50,6 @@
 /// 5 milliseconds
 pub const DEBOUNCE_DELAY_MS: u64 = 5;
 
-/// Minimum allowed debounce delay in milliseconds.
-///
-/// # Details
-/// Prevents excessively fast sampling which may miss bounces.
-///
-/// # Value
-/// 1 millisecond
-pub const MIN_DEBOUNCE_DELAY_MS: u64 = 1;
-
-/// Maximum allowed debounce delay in milliseconds.
-///
-/// # Details
-/// Prevents excessively slow sampling for responsive input.
-///
-/// # Value
-/// 100 milliseconds
-pub const MAX_DEBOUNCE_DELAY_MS: u64 = 100;
-
 /// Default debounce sample count threshold.
 ///
 /// # Details
@@ -107,21 +89,6 @@ mod tests {
     #[test]
     fn test_debounce_delay_default() {
         assert_eq!(DEBOUNCE_DELAY_MS, 5);
-    }
-
-    #[test]
-    fn test_min_delay_less_than_default() {
-        assert!(MIN_DEBOUNCE_DELAY_MS < DEBOUNCE_DELAY_MS);
-    }
-
-    #[test]
-    fn test_max_delay_greater_than_default() {
-        assert!(MAX_DEBOUNCE_DELAY_MS > DEBOUNCE_DELAY_MS);
-    }
-
-    #[test]
-    fn test_delay_range_valid() {
-        assert!(MIN_DEBOUNCE_DELAY_MS < MAX_DEBOUNCE_DELAY_MS);
     }
 
     #[test]
