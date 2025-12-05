@@ -103,10 +103,14 @@ make test
 
 mod button;
 mod config;
+mod led;
 
-use button::{run_button_loop, ButtonController};
+use button::ButtonController;
+use config::DEBOUNCE_DELAY_MS;
 use embassy_executor::Spawner;
 use embassy_rp::gpio::{Input, Level, Output, Pull};
+use embassy_time::Timer;
+use led::{led_state_to_level, LedState};
 use panic_halt as _;
 
 /// Main application entry point.
@@ -127,7 +131,20 @@ async fn main(_spawner: Spawner) {
     let button = Input::new(p.PIN_15, Pull::Up);
     let mut led = Output::new(p.PIN_16, Level::Low);
     let mut controller = ButtonController::new();
-    run_button_loop(&button, &mut led, &mut controller).await;
+    loop {
+        controller.update(button.is_high());
+        let state = if controller.is_pressed() {
+            LedState::On
+        } else {
+            LedState::Off
+        };
+        if led_state_to_level(state) {
+            led.set_high();
+        } else {
+            led.set_low();
+        }
+        Timer::after_millis(DEBOUNCE_DELAY_MS).await;
+    }
 }
 ```
 
