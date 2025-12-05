@@ -6,7 +6,7 @@
 <br>
 
 # RP2350 Rust Button Driver
-An RP2350 button driver written in Rust w/ Embassy. Button on GPIO15 (active-low, tied to GND) controls LED on GPIO16.
+An RP2350 button driver written in Rust w/ Embassy.
 
 <br>
 
