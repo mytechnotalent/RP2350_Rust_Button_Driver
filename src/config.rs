@@ -82,6 +82,16 @@ pub const BUTTON_PIN: u8 = 15;
 #[allow(dead_code)]
 pub const LED_PIN: u8 = 16;
 
+/// Default LED blink delay in milliseconds.
+///
+/// # Details
+/// Used by `LedController` for blink timing in tests and examples.
+///
+/// # Value
+/// 500 milliseconds
+#[allow(dead_code)]
+pub const BLINK_DELAY_MS: u64 = 500;
+
 #[cfg(test)]
 mod tests {
     use super::*;

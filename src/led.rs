@@ -33,11 +33,13 @@
 //! LED State Management for RP2350.
 //!
 //! BRIEF:
-//! Provides LED state enumeration and utility functions.
+//! Provides LED state enumeration and blink controller.
 //!
 //! AUTHOR: Kevin Thomas
 //! CREATION DATE: December 5, 2025
-//! UPDATE DATE: December 5, 2025
+//! UPDATE DATE: December 6, 2025
+
+use crate::config::BLINK_DELAY_MS;
 
 /// LED state enumeration.
 ///
@@ -52,6 +54,80 @@
 pub enum LedState {
     On,
     Off,
+}
+
+/// LED controller with state tracking.
+///
+/// # Details
+/// Maintains LED state and blink timing configuration.
+/// Provides methods for state transitions and queries.
+///
+/// # Fields
+/// * `state` - Current LED state
+/// * `delay_ms` - Blink delay in milliseconds
+#[derive(Debug)]
+#[allow(dead_code)]
+pub struct LedController {
+    state: LedState,
+    delay_ms: u64,
+}
+
+impl Default for LedController {
+    /// Returns default LedController instance.
+    ///
+    /// # Details
+    /// Delegates to new() for initialization.
+    ///
+    /// # Returns
+    /// * `Self` - New LedController with default values
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl LedController {
+    /// Creates new LED controller with default settings.
+    ///
+    /// # Details
+    /// Initializes controller with LED off.
+    ///
+    /// # Returns
+    /// * `Self` - New LedController instance
+    #[allow(dead_code)]
+    pub fn new() -> Self {
+        Self {
+            state: LedState::Off,
+            delay_ms: BLINK_DELAY_MS,
+        }
+    }
+
+    /// Toggles LED state and returns new state.
+    ///
+    /// # Details
+    /// Transitions LED from On to Off or Off to On.
+    ///
+    /// # Returns
+    /// * `LedState` - New LED state after toggle
+    #[allow(dead_code)]
+    pub fn toggle(&mut self) -> LedState {
+        self.state = match self.state {
+            LedState::On => LedState::Off,
+            LedState::Off => LedState::On,
+        };
+        self.state
+    }
+
+    /// Returns current blink delay.
+    ///
+    /// # Details
+    /// Delay used for blink timing in milliseconds.
+    ///
+    /// # Returns
+    /// * `u64` - Delay in milliseconds
+    #[allow(dead_code)]
+    pub fn delay_ms(&self) -> u64 {
+        self.delay_ms
+    }
 }
 
 /// Converts LedState to boolean for GPIO control.
@@ -96,5 +172,33 @@ mod tests {
     #[test]
     fn test_led_state_to_level_off() {
         assert!(!led_state_to_level(LedState::Off));
+    }
+
+    // ==================== LedController Tests ====================
+
+    #[test]
+    fn test_new_controller() {
+        let ctrl = LedController::new();
+        assert_eq!(ctrl.delay_ms(), BLINK_DELAY_MS);
+    }
+
+    #[test]
+    fn test_default_equals_new() {
+        let default = LedController::default();
+        let new = LedController::new();
+        assert_eq!(default.delay_ms(), new.delay_ms());
+    }
+
+    #[test]
+    fn test_toggle_off_to_on() {
+        let mut ctrl = LedController::new();
+        assert_eq!(ctrl.toggle(), LedState::On);
+    }
+
+    #[test]
+    fn test_toggle_on_to_off() {
+        let mut ctrl = LedController::new();
+        ctrl.toggle();
+        assert_eq!(ctrl.toggle(), LedState::Off);
     }
 }
