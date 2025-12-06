@@ -52,7 +52,8 @@ use crate::config::DEBOUNCE_COUNT;
 /// * `pressed` - Current debounced button state (true = pressed)
 /// * `raw_pressed` - Current raw (unfiltered) state
 /// * `debounce_count` - Current debounce counter
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[allow(dead_code)]
 pub struct ButtonController {
     pressed: bool,
     raw_pressed: bool,
@@ -67,6 +68,7 @@ impl Default for ButtonController {
     ///
     /// # Returns
     /// * `Self` - New ButtonController with default values
+    #[allow(dead_code)]
     fn default() -> Self {
         Self::new()
     }
@@ -80,6 +82,7 @@ impl ButtonController {
     ///
     /// # Returns
     /// * `Self` - New ButtonController instance
+    #[allow(dead_code)]
     pub fn new() -> Self {
         Self {
             pressed: false,
@@ -96,6 +99,7 @@ impl ButtonController {
     ///
     /// # Arguments
     /// * `gpio_high` - true if GPIO high (released), false if low (pressed)
+    #[allow(dead_code)]
     pub fn update(&mut self, gpio_high: bool) {
         let new_raw = !gpio_high;
         if new_raw == self.raw_pressed {
@@ -118,6 +122,7 @@ impl ButtonController {
     ///
     /// # Returns
     /// * `bool` - true if button is pressed
+    #[allow(dead_code)]
     pub fn is_pressed(&self) -> bool {
         self.pressed
     }
@@ -197,5 +202,63 @@ mod tests {
             ctrl.update(true);
         }
         assert!(!ctrl.is_pressed());
+    }
+
+    // ==================== Edge Case Tests ====================
+
+    #[test]
+    fn test_exactly_at_threshold() {
+        let mut ctrl = ButtonController::new();
+        for _ in 0..DEBOUNCE_COUNT {
+            ctrl.update(false);
+        }
+        assert!(!ctrl.is_pressed());
+        ctrl.update(false);
+        assert!(ctrl.is_pressed());
+    }
+
+    #[test]
+    fn test_one_sample_before_threshold() {
+        let mut ctrl = ButtonController::new();
+        for _ in 0..(DEBOUNCE_COUNT) {
+            ctrl.update(false);
+        }
+        assert!(!ctrl.is_pressed());
+    }
+
+    #[test]
+    fn test_state_persists_after_achieving_threshold() {
+        let mut ctrl = ButtonController::new();
+        for _ in 0..=DEBOUNCE_COUNT {
+            ctrl.update(false);
+        }
+        assert!(ctrl.is_pressed());
+        for _ in 0..5 {
+            ctrl.update(false);
+            assert!(ctrl.is_pressed());
+        }
+    }
+
+    // ==================== Trait Implementation Tests ====================
+
+    #[test]
+    fn test_clone() {
+        let ctrl1 = ButtonController::new();
+        let ctrl2 = ctrl1;
+        assert_eq!(ctrl1.is_pressed(), ctrl2.is_pressed());
+    }
+
+    #[test]
+    fn test_partial_eq() {
+        let ctrl1 = ButtonController::new();
+        let ctrl2 = ButtonController::new();
+        assert_eq!(ctrl1, ctrl2);
+    }
+
+    #[test]
+    fn test_debug_format() {
+        let ctrl = ButtonController::new();
+        let debug_str = format!("{:?}", ctrl);
+        assert!(debug_str.contains("ButtonController"));
     }
 }

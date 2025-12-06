@@ -51,6 +51,7 @@ use crate::config::BLINK_DELAY_MS;
 /// * `On` - LED is currently on (high)
 /// * `Off` - LED is currently off (low)
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[allow(dead_code)]
 pub enum LedState {
     On,
     Off,
@@ -65,7 +66,7 @@ pub enum LedState {
 /// # Fields
 /// * `state` - Current LED state
 /// * `delay_ms` - Blink delay in milliseconds
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[allow(dead_code)]
 pub struct LedController {
     state: LedState,
@@ -80,6 +81,7 @@ impl Default for LedController {
     ///
     /// # Returns
     /// * `Self` - New LedController with default values
+    #[allow(dead_code)]
     fn default() -> Self {
         Self::new()
     }
@@ -140,6 +142,7 @@ impl LedController {
 ///
 /// # Returns
 /// * `bool` - true for On, false for Off
+#[allow(dead_code)]
 pub fn led_state_to_level(state: LedState) -> bool {
     matches!(state, LedState::On)
 }
@@ -200,5 +203,54 @@ mod tests {
         let mut ctrl = LedController::new();
         ctrl.toggle();
         assert_eq!(ctrl.toggle(), LedState::Off);
+    }
+
+    #[test]
+    fn test_multiple_toggles() {
+        let mut ctrl = LedController::new();
+        assert_eq!(ctrl.toggle(), LedState::On);
+        assert_eq!(ctrl.toggle(), LedState::Off);
+        assert_eq!(ctrl.toggle(), LedState::On);
+        assert_eq!(ctrl.toggle(), LedState::Off);
+    }
+
+    #[test]
+    fn test_initial_state_off() {
+        let ctrl = LedController::new();
+        let expected = LedController {
+            state: LedState::Off,
+            delay_ms: BLINK_DELAY_MS,
+        };
+        assert_eq!(ctrl, expected);
+    }
+
+    // ==================== Trait Implementation Tests ====================
+
+    #[test]
+    fn test_led_state_debug() {
+        let state = LedState::On;
+        let debug_str = format!("{:?}", state);
+        assert!(debug_str.contains("On"));
+    }
+
+    #[test]
+    fn test_led_controller_clone() {
+        let ctrl1 = LedController::new();
+        let ctrl2 = ctrl1;
+        assert_eq!(ctrl1.delay_ms(), ctrl2.delay_ms());
+    }
+
+    #[test]
+    fn test_led_controller_partial_eq() {
+        let ctrl1 = LedController::new();
+        let ctrl2 = LedController::new();
+        assert_eq!(ctrl1, ctrl2);
+    }
+
+    #[test]
+    fn test_led_controller_debug() {
+        let ctrl = LedController::new();
+        let debug_str = format!("{:?}", ctrl);
+        assert!(debug_str.contains("LedController"));
     }
 }

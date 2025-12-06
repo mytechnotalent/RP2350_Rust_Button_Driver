@@ -48,6 +48,7 @@
 ///
 /// # Value
 /// 5 milliseconds
+#[allow(dead_code)]
 pub const DEBOUNCE_DELAY_MS: u64 = 5;
 
 /// Default debounce sample count threshold.
@@ -58,6 +59,7 @@ pub const DEBOUNCE_DELAY_MS: u64 = 5;
 ///
 /// # Value
 /// 5 samples
+#[allow(dead_code)]
 pub const DEBOUNCE_COUNT: u32 = 5;
 
 /// Button GPIO pin number.
@@ -96,6 +98,8 @@ pub const BLINK_DELAY_MS: u64 = 500;
 mod tests {
     use super::*;
 
+    // ==================== Button Configuration Tests ====================
+
     #[test]
     fn test_debounce_delay_default() {
         assert_eq!(DEBOUNCE_DELAY_MS, 5);
@@ -119,5 +123,26 @@ mod tests {
     #[test]
     fn test_button_led_pins_different() {
         assert_ne!(BUTTON_PIN, LED_PIN);
+    }
+
+    #[test]
+    fn test_blink_delay_positive() {
+        assert!(BLINK_DELAY_MS > 0);
+    }
+
+    #[test]
+    fn test_blink_delay_default() {
+        assert_eq!(BLINK_DELAY_MS, 500);
+    }
+
+    #[test]
+    fn test_debounce_delay_less_than_blink() {
+        assert!(DEBOUNCE_DELAY_MS < BLINK_DELAY_MS);
+    }
+
+    #[test]
+    fn test_gpio_pins_in_valid_range() {
+        assert!(BUTTON_PIN < 30);
+        assert!(LED_PIN < 30);
     }
 }
