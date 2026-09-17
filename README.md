@@ -1,5 +1,3 @@
-<img src="https://github.com/mytechnotalent/RP2350_Rust_Button_Driver/blob/main/RP2350_Rust_Button_Driver.png?raw=true">
-
 ## FREE Reverse Engineering Self-Study Course [HERE](https://github.com/mytechnotalent/Reverse-Engineering-Tutorial)
 ### VIDEO PROMO [HERE](https://www.youtube.com/watch?v=aD7X9sXirF8)
 
@@ -13,16 +11,6 @@ An RP2350 button driver written in Rust w/ Embassy.
 # Install ARM Toolchain
 ## NOTE: Be SURE to select `Add path to environment variable` on setup.
 [HERE](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
-
-<br>
-
-# Hardware
-## Raspberry Pi Pico 2 w/ Header [BUY](https://www.pishop.us/product/raspberry-pi-pico-2-with-header)
-## USB A-Male to USB Micro-B Cable [BUY](https://www.pishop.us/product/usb-a-male-to-usb-micro-b-cable-6-inches)
-## Raspberry Pi Pico Debug Probe [BUY](https://www.pishop.us/product/raspberry-pi-debug-probe)
-## Complete Component Kit for Raspberry Pi [BUY](https://www.pishop.us/product/complete-component-kit-for-raspberry-pi)
-## 10pc 25v 1000uF Capacitor [BUY](https://www.amazon.com/Cionyce-Capacitor-Electrolytic-CapacitorsMicrowave/dp/B0B63CCQ2N?th=1)
-### 10% PiShop DISCOUNT CODE - KVPE_HS320548_10PC
 
 <br>
 
